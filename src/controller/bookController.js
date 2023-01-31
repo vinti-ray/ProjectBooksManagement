@@ -2,12 +2,14 @@ const bookModel = require('../models/bookModel')
 const userModel = require('../models/userModel')
 const reviewModel = require('../models/reviewModel')
 const { bookJoi, updateJoi } = require('../validation/joiValidation')
+const { uploadFile } = require('../controller/aws')
 
 /*--------------------- Create Book APi--------------------- */
 const createBook = async (req, res) => {
     try {
         /* ----------------Validation---------------- */
-        let data = req.body
+        let fetchJSON = req.body.data // pass JSON key-value and fetch through req.body  in form-data
+        let data = (JSON.parse(fetchJSON)) //Parse it
         try {
             const valid = await bookJoi.validateAsync(data)
         }
@@ -18,8 +20,19 @@ const createBook = async (req, res) => {
         data.releasedAt = Date.now()
 
         /* ----------------Business Logic------------- */
+        let temp
+        let files = req.files // Get the file to upload
+        if (files && files.length > 0) {
+            let uploadFileUrl = await uploadFile(files[0])
+            temp = uploadFileUrl
+        }
+        else {
+            return res.status(400).send({ message: "No File Found" })
+        }
+        data.bookCover = temp
         let createBook = await bookModel.create(data)
         return res.status(201).send({ status: true, data: createBook })
+
 
     } catch (e) {
         return res.status(500).send({ status: false, msg: e.message })
@@ -70,14 +83,14 @@ const updateBookById = async (req, res) => {
         /* ------------------Validation-------------- */
         let data = req.body
         let bookId = req.params.bookId
-        let { title, ISBN ,excerpt,releasedAt} = data
+        let { title, ISBN, excerpt, releasedAt } = data
         if (!bookId) return res.status(400).send("BookID is required")
         try {
             const valid = await updateJoi.validateAsync(data)
         }
         catch (e) { return res.status(400).send({ msg: e.message }) }
 
-         /* Check if unique constrains are violated */
+        /* Check if unique constrains are violated */
         let checkBookExists = await bookModel.findOne({ _id: bookId, isDeleted: false })
         if (!checkBookExists) return res.status(404).send({ status: false, msg: "Book Does not exists" })
         if (title || ISBN) {

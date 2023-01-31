@@ -10,7 +10,7 @@ router.post('/register', createUser)
 router.post('/login', login)
 
 /* Book Routes */
-router.post('/books', authenticate, authCreation, createBook)
+router.post('/books', createBook)
 router.get('/books', authenticate, getBook)
 router.get('/books/:bookId', authenticate, getBookById)
 router.patch('/books/:bookId', authenticate, authUpdateDelete, updateBookById)
