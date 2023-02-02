@@ -56,7 +56,7 @@ const loginUser = async function (req, res) {
            return res.status(401).send({ status: true, message: "no user found with this credential" })
        } else {
            let token = jwt.sign({ userId: getUser._id },"groupseven",{expiresIn:"4h"})
-           res.setHeader("x-auth-key",token)
+           res.setHeader("x-api-key",token)
            return res.status(200).send({ status: true, message:"Success" ,data:token})
        }
 
