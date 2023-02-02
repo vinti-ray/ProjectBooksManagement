@@ -34,13 +34,13 @@ const bookJoi = Joi.object({
 const userJOI=Joi.object({
   title: Joi.string().trim().required().valid("Mr", "Mrs", "Miss"),
 
-  name: Joi.string().trim().required().regex(/^[a-zA-Z ]+$/).message("please enter valid name"),
+  name: Joi.string().trim().required().message("please enter valid name"),
  
   phone: Joi.string().trim().required().regex(/^[0]?[6789]\d{9}$/).message("phone is not valid"),
 
   email:Joi.string().trim().required().regex(/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/).message("please enter valid email"),
 
-  password: Joi.string().trim().required().min(8).max(15).regex(/^(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{8,15}$/).message("password  should contain Min 8 character and 1 Special Symbol"),
+  password: Joi.string().trim().required().min(8).max(15).message("password  should contain Min 8 character and 1 Special Symbol"),
 
   address: Joi.object({
     street: Joi.string(),
@@ -58,7 +58,7 @@ const userJOI=Joi.object({
     const reviewJoi = Joi.object({
       bookId: Joi.string().required(),
 
-      reviewedBy:Joi.string().trim().regex(/^[a-zA-Z ]+$/).message("please enter valid reviewer name"),
+      reviewedBy:Joi.string().trim().message("please enter valid reviewer name"),
 
       reviewedAt:Joi.date().required(),
 
@@ -74,7 +74,7 @@ const userJOI=Joi.object({
 
     const loginJoi=Joi.object({
       email:Joi.string().trim().required().regex(/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/).message("please enter valid email"),
-      password: Joi.string().trim().required().min(8).max(15).regex(/^(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{8,15}$/).message("please enter valid password"),
+      password: Joi.string().trim().required().min(8).max(15).message("please enter valid password"),
     })
 
 //=============================update book joi==============================
@@ -93,7 +93,7 @@ const userJOI=Joi.object({
 
     const updatereviewJoi=Joi.object({
       review:Joi.string(),
-      reviewedBy:Joi.string().trim().regex(/^[a-zA-Z ]+$/).message("please enter valid reveiewer's name"),
+      reviewedBy:Joi.string().trim().message("please enter valid reveiewer's name"),
       rating:Joi.number().min(1).max(5)
     })
 
